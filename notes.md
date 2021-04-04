@@ -1,3 +1,28 @@
+Personal thoughts on design patterns.
+
+There is an appealing romanticism to [The Story of
+Mel](http://www.cs.utah.edu/~elb/folklore/mel.html). On the one hand this is a
+completely valid form of programming: if the problem is small enough, or the
+programmer's brain is big enough, they can fit the whole problem in their head at once
+and find a perfect solution that takes advantage of holistic optimizations that
+a compiler would never find. But there are downsides obviously. Even Mel
+couldn't modify his own program for a new requiremement, and the task was even
+more daunting for another programmer.
+
+It's about more than writing working code, or coming up with a clever solution.
+This seems similar to people who do something just because the compiler
+complained, or because autocomplete suggested it, or they saw it highly upvoted
+on stack overflow. What is missing from all of these examples, including Mel's,
+is infusing reasoning into the program. Does the program have a structure that
+communicates how it works? This has several benefits
+
+* If the structure matches the functionlity, it helps unfamiliar programmers
+  learn the functionality, because the as you read the structure you learn its
+  purpose. A program missing explicit structure is hard to learn. A program with
+  unnecessary or perpendicular(?) structure is also hard to learn.
+* It should make it easier to modify things if the logical structure matches how
+  the problem works?
+
 ## Intro
 
 From the foreword by Grady Booch:
