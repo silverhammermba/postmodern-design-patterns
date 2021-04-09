@@ -23,6 +23,22 @@ communicates how it works? This has several benefits
 * It should make it easier to modify things if the logical structure matches how
   the problem works?
 
+## Planning out final sections?
+
+Start off with the good bits about simplifying things and reasoning behind
+patterns
+
+Definitely need a section about how it is outdated
+
+Need something like a "design pattern manifesto" to remember the purpose of
+design patters and not miss the forest for the trees, like how people bitch
+about agile when their scrum sucks.
+
+A section about approach, how you need to iterate, start simple. Don't shoot for
+ideal right away or you will fail and end up with a bloated design that looks
+really cool on paper but which is actually unhelpful and difficult to
+understand.
+
 ## Intro
 
 From the foreword by Grady Booch:
@@ -75,7 +91,7 @@ causes of redesign and why they are overkill (pg 24):
 1. creating an object by specifying a class explicitly: commits you to a
    particular implementation. i disagree, if you only need one implementation,
    you can change that one implementation, can even change a concrete class into
-   an interface (as long as you aren't using hungarian notation). also this can
+   an interface (as long as you aren't using Hungarian notation). also this can
    be a trap: what level of abstraction do you want for your interface? it's
    hard to know this up front. if you pick the wrong level of abstraction you
    will need to also redesign the interface later.
@@ -89,8 +105,8 @@ causes of redesign and why they are overkill (pg 24):
 4. dependence on object representations or implementations. you shouldn't need
    any patterns for this. this is just basic encapsulation??? TODO: revisit this
    once you read about abstract factory, bridge, memento, proxy.
-5. algorithmic dependencies. "algorthmis that are likely to be replaced should be
-   isolated", again this is just basic enscapsulation? when would it not be
+5. algorithmic dependencies. "algorithms that are likely to be replaced should be
+   isolated", again this is just basic encapsulation? when would it not be
    sufficient to just change the implementation? TODO revisit after builder,
    iterator, strategy, template method, visitor
 6. tight coupling: use abstract coupling and layering instead. though I'd say
