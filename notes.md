@@ -1,4 +1,6 @@
-Personal thoughts on design patterns.
+## Personal thoughts on design patterns.
+
+### Mel
 
 There is an appealing romanticism to [The Story of
 Mel](http://www.cs.utah.edu/~elb/folklore/mel.html). On the one hand this is a
@@ -6,22 +8,29 @@ completely valid form of programming: if the problem is small enough, or the
 programmer's brain is big enough, they can fit the whole problem in their head at once
 and find a perfect solution that takes advantage of holistic optimizations that
 a compiler would never find. But there are downsides obviously. Even Mel
-couldn't modify his own program for a new requiremement, and the task was even
+couldn't modify his own program for a new requirement, and the task was even
 more daunting for another programmer.
 
 It's about more than writing working code, or coming up with a clever solution.
-This seems similar to people who do something just because the compiler
+This seems similar to people who do something only because the compiler
 complained, or because autocomplete suggested it, or they saw it highly upvoted
 on stack overflow. What is missing from all of these examples, including Mel's,
 is infusing reasoning into the program. Does the program have a structure that
 communicates how it works? This has several benefits
 
-* If the structure matches the functionlity, it helps unfamiliar programmers
+* If the structure matches the functionality, it helps unfamiliar programmers
   learn the functionality, because the as you read the structure you learn its
   purpose. A program missing explicit structure is hard to learn. A program with
   unnecessary or perpendicular(?) structure is also hard to learn.
 * It should make it easier to modify things if the logical structure matches how
   the problem works?
+
+### Wisdom
+
+Could also compare GoF book to ancient wisdom. Yes it's wisdom, but it's also
+ancient. Don't accept it uncritically. It's not that design patterns are
+considered harmful. It's that we need to make sure we're keeping them relevant
+to modern times. Hence "postmodern".
 
 ## Planning out final sections?
 
@@ -36,7 +45,7 @@ about agile when their scrum sucks.
 
 A section about approach, how you need to iterate, start simple. Don't shoot for
 ideal right away or you will fail and end up with a bloated design that looks
-really cool on paper but which is actually unhelpful and difficult to
+cool on paper but which is actually unhelpful and difficult to
 understand.
 
 ## Intro
@@ -84,6 +93,9 @@ Method", "Strategy", or parametrized types (generics). I.e. using generics
 mean no design pattern is needed. But then...
 > None of the patterns in this book concerns parameterized types...
 
+Very outdated concept of what is reasonable to assume from the language (pg 72)
+> ...fairly esoteric capabilities like type-safe casts.
+
 WTF acquaintance vs. aggregation (pg 22)
 
 causes of redesign and why they are overkill (pg 24):
@@ -103,12 +115,12 @@ causes of redesign and why they are overkill (pg 24):
    at the wrong level, didn't save us any time. if your code is
    platform-specific this is generally a waste of time
 4. dependence on object representations or implementations. you shouldn't need
-   any patterns for this. this is just basic encapsulation??? TODO: revisit this
-   once you read about abstract factory, bridge, memento, proxy.
-5. algorithmic dependencies. "algorithms that are likely to be replaced should be
-   isolated", again this is just basic encapsulation? when would it not be
-   sufficient to just change the implementation? TODO revisit after builder,
-   iterator, strategy, template method, visitor
+   any patterns for this. this is just encapsulation??? TODO: revisit this once
+   you read about abstract factory, bridge, memento, proxy.
+5. algorithmic dependencies. "algorithms that are likely to be replaced should
+   be isolated", again this is just encapsulation? when would it not be
+   sufficient to change the implementation of the existing algorithm? TODO
+   revisit after builder, iterator, strategy, template method, visitor
 6. tight coupling: use abstract coupling and layering instead. though I'd say
    dependency injection solves most of this problem, making redesigns very cheap
 7. extending functionality by subclassing. generally agree, people seem to do
@@ -156,10 +168,10 @@ possible to swap about compositors on the fly, but how do different compositors
 handle the mixed structure of the document? This aspect of WYSIWYG editing is
 missing from the software design.
 
-Similar mistake is made with embellishments, where we use our existing glypth
+Similar mistake is made with embellishments, where we use our existing glyph
 type to represent UI-only concepts like buttons, menus, page boarders, and
 scrollbars. This makes sense only if "glyph" means "a graphical element", but up
-to now glyps represented the document content/hierarchy! Their software design
+to now glyphs represented the document content/hierarchy! Their software design
 supports adding a button/scrollbar inside a document, which might be frivolous
 depending on the requirements.
 
@@ -178,11 +190,46 @@ your application, which has two competing approaches
 Then they "solve" this problem with a bridge: a window object conforms to 1,
 then for all of its methods it calls a window implementation object which
 conforms to 2. But why not have only the window implementation objects, where
-the bridge is just the interface? The bridge is only useful if we have some
+the bridge is the interface? The bridge is only useful if we have some
 nontrivial amount of code which needs to live in the window object e.g. our
 application needs a "draw text" method, but each window system only provides a
 "draw character" method, so we're going to end up with many similar
 implementations of "draw text". TODO How easy is to transition to a bridge
 if/when we need it?
 
+### User operations
 
+The way they introduce this concept is problematic, similar to the glyphs. They
+identify that there is immediately a fundamental distinction between kinds of
+operations: those that support undo and redo and those that do not. But then
+they never introduce a fundamental distinction between these in their design.
+They unify everything under Command, and each individual command decides its own
+reversibility.
+
+This design is extremely flexible, but not in a sensible way. It allows for
+crazy shit like saving the file being reversible, or basic editing operations
+_not_ being reversible. It makes the undo implementation more complicated,
+because we need to figure out how to handle situations like lots of irreversible
+operations interspersed between reversible ones. Logically you want separate
+queues, like saving the file 100 times shouldn't push any reversible operations
+out of the undo queue. But the design is missing all of this.
+
+A more helpful design would be to have two unrelated classes:
+DocumentEditOperaiton and EditorOperation. The former is used by anything that
+can edit the actual document (and thus must be reversible) and the latter is
+used by anything that only interacts with Lexi itself, such as saving the file
+or changing preferences (which should not be reversible). Both classes can
+conform to a Command interface if you want, but that is actually a minor point
+in the design, since largely the application will probably want to keep the two
+very separate. For example a DocumentEditOperation must have a document to work
+on whereas an EditorOperation does not. Thus these two types of operations have
+fundamentally different dependencies, which our software design should reflect.
+
+## Traversal
+
+Iterator is a great pattern, but most good languages have it built-in these
+days. You should conform to your language's idiomatic iterator pattern rather
+than reinventing the wheel.
+
+Visitor is also pretty useful, but I'm curious if there are better alternatives
+in stuff like Swift.
